@@ -93,7 +93,6 @@ User → Frontend → API Gateway → Lambda
 
 <img width="1912" alt="Screenshot 2025-12-11 141846" src="https://github.com/user-attachments/assets/459c3c54-c436-40cb-a02f-3c1c1f520385" />
 
-<img width="1917" alt="Screenshot 2025-12-11 141807" src="https://github.com/user-attachments/assets/26803956-d571-4aa3-9fd1-783aedae12c2" />
 
 <hr/>
 
