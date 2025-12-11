@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather Voice Assistant</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 400px;
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0px 5px 20px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        input {
+            width: 95%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            outline: none;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #4facfe;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 10px;
+            font-size: 17px;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background: #1b8ef7;
+        }
+
+        .audio-box {
+            margin-top: 20px;
+        }
+
+        .loading {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #444;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>🌦 Weather Voice Assistant</h2>
+
+        <input id="city" placeholder="Enter city name (e.g., Delhi)" />
+
+        <button onclick="getWeather()">Get Weather Voice</button>
+
+        <p id="loading" class="loading">⏳ Processing... Please wait...</p>
+
+        <div id="audioBox" class="audio-box"></div>
+    </div>
+
+    <script>
+        // 🔥 Replace with your API endpoint
+        const API_URL = "https://6tkdkzvdw5.execute-api.ap-south-1.amazonaws.com/prod/weather";
+
+
+
+        async function getWeather() {
+            const city = document.getElementById("city").value.trim();
+            const loading = document.getElementById("loading");
+            const audioBox = document.getElementById("audioBox");
+
+            if (!city) {
+                alert("Please enter a city name.");
+                return;
+            }
+
+            loading.style.display = "block";
+            audioBox.innerHTML = "";
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ city })
+                });
+
+                const data = await response.json();
+                console.log(data);
+
+                if (!data.audio_url) {
+                    alert("Error: No audio received.");
+                    loading.style.display = "none";
+                    return;
+                }
+
+                // 🎧 Add audio player
+                audioBox.innerHTML = `
+                    <audio controls autoplay>
+                        <source src="${data.audio_url}" type="audio/mpeg">
+                    </audio>
+                `;
+
+            } catch (error) {
+                alert("Error fetching weather: " + error.message);
+            }
+
+            loading.style.display = "none";
+        }
+    </script>
+</body>
+</html>
